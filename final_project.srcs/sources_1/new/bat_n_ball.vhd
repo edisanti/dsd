@@ -26,6 +26,7 @@ ARCHITECTURE Behavioral OF bat_n_ball IS
     CONSTANT bat_h : INTEGER := 3; -- bat height in pixels
     SIGNAL score_counter : std_logic_vector (15 DOWNTO 0);
     SIGNAL score_counter_tmp : std_logic_vector(15 DOWNTO 0);
+    SIGNAL score_counter_tmp1 : std_logic_vector(15 DOWNTO 0);
     SIGNAL lvl_counter : std_logic_vector (15 DOWNTO 0):= conv_std_logic_vector(1,16);
     SIGNAL lives : STD_LOGIC_VECTOR(15 DOWNTO 0) := conv_std_logic_vector(5,16);
     SIGNAL lives_tmp : INTEGER := 0;
@@ -146,6 +147,7 @@ BEGIN
             ball_x_motion <= (NOT ball_speed) + 1;
             ball_y_motion <= (NOT ball_speed) + 1; -- set vspeed to (- ball_speed) pixels
             score_counter_tmp <= "0000000000000000";
+            score_counter_tmp1 <= "0000000000000000";
             lives_tmp <= 0;
             
             IF lvl_counter >= "0000000000000011" THEN
@@ -166,7 +168,7 @@ BEGIN
         
         ELSIF ball_y1 <= bsize THEN -- bounce off top wall
             ball_y_motion1 <= ball_speed; -- set vspeed to (+ ball_speed) pixels
-            score_counter_tmp <= "0000000000000000";
+            score_counter_tmp1 <= "0000000000000000";
             lives_tmp <= 0;
             
         ELSIF ball_y + bsize >= 600 AND lives_tmp = 0 THEN -- if ball meets bottom wall
@@ -185,7 +187,7 @@ BEGIN
             lives_tmp <= 0;
             game_on1 <= '0'; -- and make ball disappear
             game_on <= '0';
-            score_counter_tmp <= "0000000000000000";
+            score_counter_tmp1 <= "0000000000000000";
             
         END IF;
         
@@ -216,10 +218,12 @@ BEGIN
         
         IF ball_x1 + bsize >= 800 THEN -- bounce off right wall
             ball_x_motion1 <= (NOT ball_speed1) + 1; -- set hspeed to (- ball_speed) pixels
-            score_counter_tmp <= "0000000000000000";
+            --score_counter_tmp <= "0000000000000000";
+            score_counter_tmp1 <= "0000000000000000";
             lives_tmp <= 0;
         ELSIF ball_x1 <= bsize THEN -- bounce off left wall
-            score_counter_tmp <= "0000000000000000";
+            --score_counter_tmp <= "0000000000000000";
+            score_counter_tmp1 <= "0000000000000000";
             lives_tmp <= 0;
             ball_x_motion1 <= ball_speed1; -- set hspeed to (+ ball_speed) pixels
         END IF;
@@ -244,7 +248,7 @@ BEGIN
                         ball_speed <= "00000000001";
                         ball_speed1 <= "00000000001";
                         game_on1 <= '1';
-                        ball_x_motion1 <= (NOT ball_speed1) + 1;
+                        --ball_x_motion1 <= (NOT ball_speed1) + 1;
                         ball_y_motion1 <= (NOT ball_speed1) + 1;
 
 
@@ -268,9 +272,9 @@ BEGIN
            (ball_x1 - bsize/2) <= (bat_x + bat_w) AND
              (ball_y1 + bsize/2) >= (bat_y - bat_h) AND
              (ball_y1 - bsize/2) <= (bat_y + bat_h) AND 
-              score_counter_tmp <= "0000000000000000" THEN
+              score_counter_tmp1 <= "0000000000000000" THEN
                 ball_y_motion1 <= (NOT ball_speed1) + 1;
-                score_counter_tmp <= "1111111111111111";
+                score_counter_tmp1 <= "1111111111111111";
                 lives_tmp <= 0;
                 score_counter <= score_counter + "0000000000000001";
                 
