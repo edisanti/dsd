@@ -16,6 +16,18 @@
 
 ## How to Get the Project to Work in Vivado and Nexys Board (5 points)
 * A summary of the steps to get the project to work in Vivado and on the Nexys board (5 points of the Submission category)
+
+### 1. Create a new RTL project in Vivado Quick Start
+* Add six source files (file type VHDL): ***clk_wiz_0, clk_wiz_0_clk_wiz, vga_sync, bat_n_ball, adc_if,*** and ***pong***
+* Create a new constraint file (file type XDC) called ***pong***
+* Select Nexy A7-100T board
+* Copy the VHDL code from the dsd/Nexys-A7/Lab-6 for clk_wiz_0, clk_wiz_0_clk_wiz, vga_sync.vhd, bat_n_ball.vhd, adc_if.vhd, pong_2.vhd (for the pong source file), and pong_2.xdc (for the pong constraint file) 
+### 2. Run Synthesis
+### 3. Run Implementation
+### 4. Generate bitstream, open hardware manager, and program device
+* Click 'Program Device' then click xc7a100t_0 to download pong.bit to the Nexys A7-100T board
+### 5. Initiate the game by pushing the BTNC button
+* Use the BTNL and BTNR to move the bat left and right
  
  ## Description of Inputs and Outputs going from the Vivado Project to the Nexys board (10 points)
  * Description of inputs from and outputs to the Nexys board from the Vivado project (10 points of the Submission category)
