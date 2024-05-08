@@ -182,11 +182,13 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
             life_control <= 1;
 	    ...
 ```
-  * To subtract one from lives, we created an if statement outside of the "if ball meet bottom wall" if statement. If life control is assigned to one, then the lives value would be subtracted from. This is implemented in the code below:
+  * To subtract one from lives, we created an if statement outside of the "if ball meet bottom wall" if statement. If life_control is assigned to one, then the lives value would be subtracted from. Then after lives is altered, life_control is assigned back to zero to keep the if statement from running again until the ball meets the bottom wall. This is implemented in the code below:
 ```
       IF life_control = 1 THEN
       lives <= lives - "0000000000000001";
       ...
+      life_control <= 0;
+      END IF;
 ```
   * To display the lives value, lives is assigned to lives_display
     * `lives_display <= lives;` 
@@ -361,6 +363,7 @@ ARCHITECTURE Behavioral OF pong IS
  	* We created the score_counter_tmp1 signal, and this was implemented everywhere the original score_counter_tmp was implemented to remedy this issue.
 
 ### Implementing a "game over" and Reset
+* To implement our "game over" we worked mostly in the 
 ### Implement "kill switch"
 
 ## Summary (10 points)
