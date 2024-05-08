@@ -234,7 +234,43 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
 	         --data(19 DOWNTO 16) WHEN dig = "100"
 
 ```
-
+  * After this, we only had to create signals and ports that would mimic the original code to display score_counter in pong.vhd and bat_n_ball.vhd.
+  * In the pong.vhd file, we created the following ports and signals:
+    
+```
+ARCHITECTURE Behavioral OF pong IS
+    ...
+    SIGNAL display_lives : std_logic_vector (15 DOWNTO 0); -- value to be displayed
+    SIGNAL display_lvl : std_logic_vector (15 DOWNTO 0); -- value to be displayed
+    ...
+    COMPONENT bat_n_ball IS
+        PORT (
+        ...
+            lvl_display : OUT std_logic_vector (15 DOWNTO 0);
+            lives_display: OUT std_logic_vector (15 DOWNTO 0)
+	    ...
+    COMPONENT leddec16 IS
+        PORT (
+	...
+            data_lvl : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+            data_lives : IN STD_LOGIC_VECTOR (15 DOWNTO 0);
+	    ...
+```
+  * These ports were implemented in their corresponding files as well.
+  * Finally, to connect the data created in vivado and display it on the LEDs, you must assign the data and LED to the same signal. This is shown below:
+```
+    add_bb : bat_n_ball
+    PORT MAP(--instantiate bat and ball component
+    ...
+        lvl_display => display_lvl, 
+        lives_display => display_lives
+    );
+    ...
+    led1 : leddec16
+    PORT MAP(
+      dig => led_mpx, data => display, data_lvl => display_lvl, data_lives => display_lives,
+      ...
+```
 ### <ins>Initializing Second Ball<ins>
 * One aspect of our game was to add a second ball once the user reached level 3. One ball would be going rather slow while the other remained at a quicker pace. Due to the added difficulty of the second ball we also decided to double the bat size when reaching level 3.
 * In order to accomplish this, we had to duplicate all signals that impacted the play of the ball, which included: ball speed, turning the ball on/off, turning the game on/off, the position of the ball in both the x and y directions, and the motion of the ball in the x and y directions.
