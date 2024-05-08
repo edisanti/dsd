@@ -54,9 +54,6 @@ ARCHITECTURE Behavioral OF bat_n_ball IS
     SIGNAL ball_x_motion, ball_y_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := ball_speed;
     SIGNAL ball_x_motion1, ball_y_motion1 : STD_LOGIC_VECTOR(10 DOWNTO 0) := ball_speed;
 BEGIN
---    red <= NOT bat_on; -- color setup for red ball and cyan bat on white background
---    green <= NOT ball_on;
---    blue <= NOT ball_on;
     score_display <= score_counter;
     lives_display <= lives;
     lvl_display <= lvl_counter;
@@ -154,7 +151,6 @@ BEGIN
                 game_on1 <= '1';
                 ball_x_motion1 <= (NOT ball_speed1) + 1;
                 ball_y_motion1 <= (NOT ball_speed1) + 1;
-                --ball_speed <= "00000000100";
             END IF;
             
             IF color_control = 1 THEN
@@ -218,11 +214,9 @@ BEGIN
         
         IF ball_x1 + bsize >= 800 THEN -- bounce off right wall
             ball_x_motion1 <= (NOT ball_speed1) + 1; -- set hspeed to (- ball_speed) pixels
-            --score_counter_tmp <= "0000000000000000";
             score_counter_tmp1 <= "0000000000000000";
             lives_tmp <= 0;
         ELSIF ball_x1 <= bsize THEN -- bounce off left wall
-            --score_counter_tmp <= "0000000000000000";
             score_counter_tmp1 <= "0000000000000000";
             lives_tmp <= 0;
             ball_x_motion1 <= ball_speed1; -- set hspeed to (+ ball_speed) pixels
@@ -248,14 +242,8 @@ BEGIN
                         ball_speed <= "00000000001";
                         ball_speed1 <= "00000000001";
                         game_on1 <= '1';
-                        --ball_x_motion1 <= (NOT ball_speed1) + 1;
+                        ball_x_motion1 <= (NOT ball_speed1) + 1;
                         ball_y_motion1 <= (NOT ball_speed1) + 1;
-
-
---                    ELSIF lvl_counter > "0000000000000010" THEN
---                        game_on1 <= '1';
---                        ball_x_motion1 <= (NOT ball_speed1) + 1;
---                        ball_y_motion1 <= (NOT ball_speed1) + 1;
                     END IF;
 
                     ball_speed <= ball_speed + "00000000001";
