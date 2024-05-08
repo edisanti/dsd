@@ -103,6 +103,7 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
 ```
    * To start the game at the default color scheme, we initialized the signal color_control = 0 (code shown previously)
    * To change the color schemes between the default and alternative when a player levels up, an if statement is implemented within the "level up" if statement. The way it works is that when a player levels up, if the default color scheme was currently displayed (color_control <= 0), then the color_control would be assigned to a new value of two (color_control <= 2) and vice versa. This is implemented in the code below:
+
 ```
 	            ...
                     IF color_control = 0 THEN
@@ -112,8 +113,9 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
                     END IF;
 		    ...
 ```
-    * To turn the bat red when the player encounters "game over," color_control is assigned to 1 (color_control <= 1) in the "game over" if statement. This is implemented in the code shown below:
-```
+   * To turn the bat red when the player encounters "game over," color_control is assigned to 1 (color_control <= 1) in the "game over" if statement. This is implemented in the code shown below:
+    
+````
       IF life_control = 1 THEN
         lives <= lives - "0000000000000001";
          IF lives = "0000000000000001" THEN
@@ -126,9 +128,9 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
             color_control <= 1;
             END IF;
             ...
-```
-    * When initially implementing this code, we had assigned color_control <= 0 when the ball was initialized, or when the center button was pressed, so that the game could reset to the default color scheme after experiencing a "game over." We observed that by doing this, the default color scheme would display every time the center button was pressed. This causes issues in the case that a ball falls while the alternative color scheme is displayed. The color scheme would change when a player does not yet reach the next level. 
-    * To remedy this issue, our team implemented an if statement that would display the default color scheme only if the bat was previously red (color_control <= 1)
+````
+* When initially implementing this code, we had assigned color_control <= 0 when the ball was initialized, or when the center button was pressed, so that the game could reset to the default color scheme after experiencing a "game over." We observed that by doing this, the default color scheme would display every time the center button was pressed. This causes issues in the case that a ball falls while the alternative color scheme is displayed. The color scheme would change when a player does not yet reach the next level. 
+* To remedy this issue, our team implemented an if statement that would display the default color scheme only if the bat was previously red (color_control <= 1)
 ```
         IF serve = '1' AND game_on = '0' THEN -- test for new serve
             
