@@ -39,6 +39,15 @@
 * “Modifications” (15 points of the Submission category)
   * If building on an existing lab or expansive starter code of some kind, describe your “modifications” – the changes made to that starter code to improve the code, create entirely new functionalities, etc. Unless you were starting from one of the labs, please share any starter code used as well, including crediting the creator(s) of any code used. It is perfectly ok to start with a lab or other code you find as a baseline, but you will be judged on your contributions on top of that pre-existing code!
 	* If you truly created your code/project from scratch, summarize that process here in place of the above.
+ 
+
+* Color Change
+* initializing a second ball at level three
+* implementing "lives"
+* implementing "levels" and level up
+* displaying level counter, life counter, and score counter
+* implementing a "game over" and reset
+* ball speed increase
 
 ## Summary (10 points)
 * Conclude with a summary of the process itself – who was responsible for what components (preferably also shown by each person contributing to the github repository!), the timeline of work completed, any difficulties encountered and how they were solved, etc. (10 points of the Submission category)
