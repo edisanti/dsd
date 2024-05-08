@@ -197,7 +197,7 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
       END IF;
 ```
   * To display the lives value, lives is assigned to lives_display
-    * `lives_display <= lives;` 
+    * `lives_display <= lives;`
 
 ### <ins>Implementing "levels" and Leveling Up<ins>
   * Implenting our levels component started with creating an output port "lvl_display" and a signal "lvl_counter." Lvl_counter starts at an initial value of one as most games start at level one.
@@ -228,9 +228,11 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
   * The lvl_counter is displayed by assigning it to lvl_display
     * `lvl_display <= lvl_counter;`
 
-
 ### <ins>Displaying Level Counter, Life Counter, and Score Counter<ins>
   * The implementation of this modification starts in our ledded16.vhd file. First, we commented out some lines so only LEDs 0, 3, and 7 would display. From left to right, these LEDs would display the lives, lvl_counter, and score_counter. We created two input ports called "data_lvl" and "data_lives" to mimic the behavior of the input port "data," which currently displays the score counter.
+![image](life_display.png)
+![image](lvl_display.png)
+![image](score_display.png)
     * ` data_lvl : IN STD_LOGIC_VECTOR (15 DOWNTO 0); `
     * ` data_lives : IN STD_LOGIC_VECTOR (15 DOWNTO 0); `
   * We came to understand that the data is dispersed to specific LEDs through "data4." We then utilized this information to assign data_lvl to LED 3 and data_lives to LED 7 so that they can display the level value and lives value respectively. This is implemented in the code below:
