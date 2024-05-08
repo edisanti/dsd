@@ -79,8 +79,8 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
     * The alternative color scheme of a green bat and a purple ball when a player levels up
   * To implement these color changes, our team created a new process named "cball" or color ball and a signal named "color_control" set to an initial value of 0
     * `SIGNAL color_control : INTEGER := 0;`
-  * color_control is meant to keep track of the color_scheme that is presently displayed on the screen. If color_control = 0, then the default color scheme will display. If color_control = 1, then the bat will turn red and the ball will turn cyan. However, because the ball will not be displayed when a player encounters "game over," the player will never see the cyan ball displayed. If color_control = 2, then the alternative color scheme will display a green bat and a purple ball. This is implemented in the code below.
-   ```
+  * color_control is meant to keep track of the color_scheme that is presently displayed on the screen. If color_control = 0, then the default color scheme will display. If color_control = 1, then the bat will turn red and the ball will turn cyan. However, because the ball will not be displayed when a player encounters "game over," the player will never see the cyan ball displayed. If color_control = 2, then the alternative color scheme will display a green bat and a purple ball. This is implemented in the code below:
+```
     cball : PROCESS (color_control, bat_on) IS
     BEGIN
     
@@ -100,8 +100,17 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
     END IF;
 
     END PROCESS;
-    ```
-   * 
+```
+   * To start the game at the default color scheme, we initialized the signal color_control = 0 (code shown previously)
+   * To change the color schemes between the default and alternative when a player levels up, an if statement is implemented within the "level up" if statement. The way it works is that when a player levels up, if the default color scheme was currently displayed (color_control = 0), then the color_control would be assigned to a new value of two (color_control = 2) and vice versa. This is implemented in the code below:
+```
+                    IF color_control = 0 THEN
+                        color_control <= 2;
+                    ELSIF color_control = 2 THEN
+                        color_control <= 0;
+                    END IF;
+```
+
 * initializing a second ball at level three
 * implementing "lives"
 * implementing "levels" and level up
