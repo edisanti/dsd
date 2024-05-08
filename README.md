@@ -1,4 +1,4 @@
-# dsd
+# CPE 487 - Digital System Design *Final Project*
 
 ## Submission (80% of your project grade):
 * Your final submission should be a github repository of very similar format to the labs themselves with an opening README document with the expected components as follows:
