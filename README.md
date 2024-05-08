@@ -78,8 +78,11 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
 ### <ins>Color Change<ins>
   * As previously mentioned, we wanted our game to have distinct color schemes on three separate occasions:
     * The default color scheme of a cyan bat and a red ball
+      ![image](default.jpg)
     * The bat turning red when a player has lost all their lives
+      ![image](lose.jpg)
     * The alternative color scheme of a green bat and a purple ball when a player levels up
+      ![image](alternate.jpg)
   * To implement these color changes, our team created a new process named "cball" or color ball and a signal named "color_control" set to an initial value of 0
     * `SIGNAL color_control : INTEGER := 0;`
   * color_control is meant to keep track of the color_scheme that is presently displayed on the screen. If color_control <= 0, then the default color scheme will display. If color_control <= 1, then the bat will turn red and the ball will turn cyan. However, because the ball will not be displayed when a player encounters "game over," the player will never see the cyan ball displayed. If color_control <= 2, then the alternative color scheme will display a green bat and a purple ball. This is implemented in the code below:
