@@ -74,7 +74,7 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
   * If building on an existing lab or expansive starter code of some kind, describe your “modifications” – the changes made to that starter code to improve the code, create entirely new functionalities, etc. Unless you were starting from one of the labs, please share any starter code used as well, including crediting the creator(s) of any code used. It is perfectly ok to start with a lab or other code you find as a baseline, but you will be judged on your contributions on top of that pre-existing code!
  
 
-### Color Change
+### <ins>Color Change<ins>
   * As previously mentioned, we wanted our game to have distinct color schemes on three separate occasions:
     * The default color scheme of a cyan bat and a red ball
     * The bat turning red when a player has lost all their lives
@@ -159,8 +159,8 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
             END IF;
             ...
 ```
-### Initializing a Second Ball and Wider Bat at Level Three
-### Implementing "lives"
+
+### <ins>Implementing "lives"<ins>
   * Our team wanted to incorporate a lives component in our game to enhance gameplay. To do this, we created an output port "lives_display" in our bat_n_ball.vhd file. We also created two signals, "lives" and "lives_tmp." "Lives" is initialized with a value of 5 so that a player starts off with 5 lives. "Lives_tmp" is initialized at 0, the purpose in this will be explained later on
 ```
    ...
@@ -191,7 +191,7 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
   * To display the lives value, lives is assigned to lives_display
     * `lives_display <= lives;` 
 
-### Implementing "levels" and Leveling Up
+### <ins>Implementing "levels" and Leveling Up<ins>
   * Implenting our levels component started with creating an output port "lvl_display" and a signal "lvl_counter." Lvl_counter starts at an initial value of one as most games start at level one.
 ```
 	...
@@ -221,7 +221,7 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
     * `lvl_display <= lvl_counter;`
 
 
-### Displaying Level Counter, Life Counter, and Score Counter
+### <ins>Displaying Level Counter, Life Counter, and Score Counter<ins>
   * The implementation of this modification starts in our ledded16.vhd file. First, we commented out some lines so only LEDs 0, 3, and 7 would display. From left to right, these LEDs would display the lives, lvl_counter, and score_counter. We created two input ports called "data_lvl" and "data_lives" to mimic the behavior of the input port "data," which currently displays the score counter.
     * ` data_lvl : IN STD_LOGIC_VECTOR (15 DOWNTO 0); `
     * ` data_lives : IN STD_LOGIC_VECTOR (15 DOWNTO 0); `
@@ -234,6 +234,95 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
 	         --data(19 DOWNTO 16) WHEN dig = "100"
 
 ```
+
+### <ins>Initializing Second Ball<ins>
+* One aspect of our game was to add a second ball once the user reached level 3. One ball would be going rather slow while the other remained at a quicker pace. Due to the added difficulty of the second ball we also decided to double the bat size when reaching level 3.
+* In order to accomplish this, we had to duplicate all signals that impacted the play of the ball, which included: ball speed, turning the ball on/off, turning the game on/off, the position of the ball in both the x and y directions, and the motion of the ball in the x and y directions.
+  ````
+    SIGNAL ball_speed : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR (4, 11); 
+    SIGNAL ball_speed1 : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR (1, 11);
+    SIGNAL ball_on : STD_LOGIC; -- indicates whether ball is at current pixel position
+    SIGNAL ball_on1: STD_LOGIC;
+    SIGNAL bat_on : STD_LOGIC; -- indicates whether bat at over current pixel position
+    SIGNAL game_on : STD_LOGIC := '0'; -- indicates whether ball is in play
+    SIGNAL game_on1 : STD_LOGIC := '0';
+    ...
+    SIGNAL ball_x : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(400, 11);
+    SIGNAL ball_y : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(300, 11);
+    SIGNAL ball_x1 : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(400, 11);
+    SIGNAL ball_y1 : STD_LOGIC_VECTOR(10 DOWNTO 0) := CONV_STD_LOGIC_VECTOR(300, 11);
+    ...
+    SIGNAL ball_x_motion, ball_y_motion : STD_LOGIC_VECTOR(10 DOWNTO 0) := ball_speed;
+    SIGNAL ball_x_motion1, ball_y_motion1 : STD_LOGIC_VECTOR(10 DOWNTO 0) := ball_speed;
+  ````
+	* Everything denoted *xxx*1 is a signal that is utilized in the implementation of the second ball.
+  ````
+  -- second ball
+        IF pixel_col <= ball_x1 THEN -- vx = |ball_x - pixel_col|
+            vx := ball_x1 - pixel_col;
+        ELSE
+            vx := pixel_col - ball_x1;
+        END IF;
+        IF pixel_row <= ball_y1 THEN -- vy = |ball_y - pixel_row|
+            vy := ball_y1 - pixel_row;
+        ELSE
+            vy := pixel_row - ball_y1;
+        END IF;
+        IF ((vx * vx) + (vy * vy)) < (bsize * bsize) THEN -- test if radial distance < bsize
+            ball_on1 <= game_on1;
+        ELSE
+            ball_on1 <= '0';
+        END IF;
+  ````
+	* This process follows the same steps as the first ball. It is essentially setting all of the parameters to draw the ball. Firstly, it is setting the vertical bounds for the ball, then the horizontal bounds (without the last if statement, would draw a square), and finally bounds the circle with its radius. If a pixel falls within the bounds of the circle, then it turns on that pixel when the game is initiated.
+ 		* ball_x1, ball_y1: the x and y position of the second ball
+		* ball_on1, game_on1: allows the second ball to be switched on when game_on1 is switched on when the user reaches level 3
+* We have game_on1 <= '1' in two instances:
+	1. When serve = '1' (when BTNC is pressed). This makes sure that if the user is at level 3 or above and the ball meets the bottom wall, but there are still lives remaining, the user will still have two balls in play when serving the ball again.
+		```
+		IF lvl_counter >= "0000000000000011" THEN
+			game_on1 <= '1';
+			ball_x_motion1 <= (NOT ball_speed1) + 1;
+			ball_y_motion1 <= (NOT ball_speed1) + 1;
+		    END IF;
+		```	
+	2. When the first ball bounces off of the bat, we check the level counter, and if it's on level 3, then we turn on the second ball.
+		```
+  		IF lvl_counter = "0000000000000010" THEN
+                        bat_w <= 80;
+                        ball_speed <= "00000000001";
+                        ball_speed1 <= "00000000001";
+                        game_on1 <= '1';
+                        ball_x_motion1 <= (NOT ball_speed1) + 1;
+                        ball_y_motion1 <= (NOT ball_speed1) + 1;
+                    END IF;
+  		```  
+* Once the second ball is turned on, we follow the same parameters as the original ball: bounce the ball off the top wall, right wall, and left wall, and turn the ball off if it meets the bottom wall.
+	* Top wall:
+		````
+		ELSIF ball_y1 <= bsize THEN -- bounce off top wall
+		    ball_y_motion1 <= ball_speed; -- set vspeed to (+ ball_speed) pixels
+		    score_counter_tmp1 <= "0000000000000000";
+		    lives_tmp <= 0;
+		````
+   * Right and left walls:
+		````
+		IF ball_x1 + bsize >= 800 THEN -- bounce off right wall
+		    ball_x_motion1 <= (NOT ball_speed1) + 1; -- set hspeed to (- ball_speed) pixels
+		    score_counter_tmp1 <= "0000000000000000";
+		    lives_tmp <= 0;
+		ELSIF ball_x1 <= bsize THEN -- bounce off left wall
+		    score_counter_tmp1 <= "0000000000000000";
+		    lives_tmp <= 0;
+		    ball_x_motion1 <= ball_speed1; -- set hspeed to (+ ball_speed) pixels
+		END IF;
+		````
+* One issue we ran into when implementing the second ball was that one of the two balls would go through the bat. At first we believed it was a glitch, however, we quickly realized that it was happening much to frequently to be just a glitch. The issue turned out to be a lack of a temporary counter variable for the second ball. Without a score_counter_tmp1, the second ball to "impact" the bat would pass through unless the first ball had impacted a wall to cause the original score_counter_tmp to be zero.
+	```
+	SIGNAL score_counter_tmp : std_logic_vector(15 DOWNTO 0);
+	SIGNAL score_counter_tmp1 : std_logic_vector(15 DOWNTO 0);
+	```
+ 	* We created the score_counter_tmp1 signal, and this was implemented everywhere the original score_counter_tmp was implemented to remedy this issue.
 
 ### Implementing a "game over" and Reset
 ### Implement "kill switch"
