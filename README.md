@@ -51,6 +51,7 @@
 * Later on, another input (BTNU) was added to the game that served as a "kill switch" for the game. This enabled the user to end the game and reset the hit counter, level counter, and lives.
 	* BTNU: resets all aspects of game, and awaits the pressing of BTNC to restart\
 `set_property -dict { PACKAGE_PIN M18 IOSTANDARD LVCMOS33 } [get_ports { BTNU }];`
+![image](kill_switch.gif)
 
 * The primary output modification made, was altering which display anodes were turned on from the 7-segment display. In the original Lab 6 program, anodes 0 through three were turned on to display the hit counter. For the project, we were keeping the implementation of the hit counter, while also implementing a level counter and a lives counter that were to be displayed to the user. In order for this to be practical and readable to the user, there needed to be space between the anodes that were on.
 	* On anode 0, we displayed the hit counter (that would only ever count up to three before resetting to 0 when levelling up).
