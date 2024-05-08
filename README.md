@@ -34,6 +34,37 @@
   	* As part of this category, if using starter code of some kind (discussed below), you should add at least one input and at least one output appropriate to your project to demonstrate your understanding of modifying the ports of your various architectures and components in VHDL as well as the separate .xdc constraints file.
 
 * Images and/or videos of the project in action interspersed throughout to provide context (10 points of the Submission category)
+  
+* There were three primary inputs that allowed this game to function: BTNC, BTNL, and BTNR. All of these were pre-existing inputs that were a part of Lab 6.
+	* BTNC: initiate the game and "serve" the ball
+	* BTNL: move the bat to the left
+ 	* BTNR: move the bat to the right\
+`set_property -dict { PACKAGE_PIN N17 IOSTANDARD LVCMOS33 } [get_ports { btn0 }]; #IO_L9P_T1_DQS_14 Sch=btnc`\
+`set_property -dict { PACKAGE_PIN P17 IOSTANDARD LVCMOS33 } [get_ports { btnl }]; #IO_L12P_T1_MRCC_14 Sch=btnl`\
+`set_property -dict { PACKAGE_PIN M17 IOSTANDARD LVCMOS33 } [get_ports { btnr }]; #IO_L10N_T1_D15_14 Sch=btnr`
+
+* Later on, another input (BTNU) was added to the game that served as a "kill switch" for the game. This enabled the user to end the game and reset the hit counter, level counter, and lives.
+	* BTNU: resets all aspects of game, and awaits the pressing of BTNC to restart\
+`set_property -dict { PACKAGE_PIN M18 IOSTANDARD LVCMOS33 } [get_ports { BTNU }];`
+
+* The primary output modification made, was altering which display anodes were turned on from the 7-segment display. In the original Lab 6 program, anodes 0 through three were turned on to display the hit counter. For the project, we were keeping the implementation of the hit counter, while also implementing a level counter and a lives counter that were to be displayed to the user. In order for this to be practical and readable to the user, there needed to be space between the anodes that were on.
+	* On anode 0, we displayed the hit counter (that would only ever count up to three before resetting to 0 when levelling up).
+ 	* Anodes 1 and 2 were turned off.
+  	* On anode 3, we displayed the level counter. The level would increase on every third hit of the ball.
+  	* Anodes 4, 5, and 6 were turned off.
+  	* On anode 7, the number of lives were displayed. This would increment down by one (from five) every time the ball met the bottom wall.
+
+````
+anode <= "11111110" WHEN dig = "000" ELSE -- 0
+--	         "11111101" WHEN dig = "001" ELSE -- 1
+--	         "11111011" WHEN dig = "010" ELSE -- 2
+	         "11110111" WHEN dig = "011" ELSE -- 3
+--	         "11101111" WHEN dig = "100" ELSE -- 4
+--	         "11011111" WHEN dig = "101" ELSE -- 5 
+--	         "10111111" WHEN dig = "110" ELSE -- 6
+	         "01111111" WHEN dig = "111" ELSE -- 7
+	         "11111111";
+````
 
 ## Modifications (15 points)
 * “Modifications” (15 points of the Submission category)
