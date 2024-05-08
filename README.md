@@ -363,7 +363,22 @@ ARCHITECTURE Behavioral OF pong IS
  	* We created the score_counter_tmp1 signal, and this was implemented everywhere the original score_counter_tmp was implemented to remedy this issue.
 
 ### Implementing a "game over" and Reset
-* To implement our "game over" we worked mostly in the 
+* To implement our "game over" we worked mostly in the "life control" if statement (as previously mentioned in the lives modification)
+* We created an if statement with the condition that lives was equal to 1 (lives = "0000000000000001"). Initially, the condition was lives = 0000000000000000 ( or 0 in decimal), however, the "game over" changes didn't implement until after the ball "fell" whilst lives = 0000000000000000. To accomodate for this, the condition was set to lives = "0000000000000001". Once "game over" was reached, the game resets. This means ball speed(s), bat width, score_counter, lvl_counter, and lives were reset to their initial values, respectively. The bat also turns red to indicate "game over." These changes are implemented in the code below:
+```
+      IF life_control = 1 THEN
+        lives <= lives - "0000000000000001";
+         IF lives = "0000000000000001" THEN
+            ball_speed <= "00000000100";
+            ball_speed1 <= "00000000000";
+            bat_w <= 40;
+            score_counter <= "0000000000000000";
+            lvl_counter <= "0000000000000001";
+            lives <= "0000000000000101"; --5
+            color_control <= 1;
+           END IF;
+	   ...
+```
 ### Implement "kill switch"
 
 ## Summary (10 points)
