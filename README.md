@@ -8,7 +8,7 @@
   * The more detailed the better – you all know how much I love a good finite state machine and Boolean logic, so those could be some good ideas if appropriate for your system. If not, some kind of high level block diagram showing how different parts of your program connect together and/or showing how what you have created might fit into a more complete system could be appropriate instead.
 
 * With this project, we really wanted to improve upon the gameplay of lab 6 and enhance user experience, as well as make a few modifications to make the game more interesting. When first playing the game, three LEDs will flash on. Those will be your lives, your current level, and your score displayed from left to right. At the start of the game, you'll begin with 5 lives and start on level 1 with a score of 0. The goal of the game is to hit the ball with your bat to keep the ball from "falling" or touching the bottom of the screen. You can start the game by initializing the ball using the center button and you only move your bat left or right using the buttons, btnl and btnr, on the Nexys board. If you hit the ball with the bat, your score increases by 1. If you hit the ball three times, you'll level up! This means your score counter will reset back to 0 and your level counter will increase by 1. You'll also notice the speed of your ball will increase slightly each time you increase in level. To indicate your level up, the colors of the bat and ball will change from cyan and red to green and purple, respectively. As you level up, the color schemes will toggle back and forth. If you let the ball touch the bottom of the screen, the ball will disappear or "fall" and your lives will decrease by 1. If that happens, no worries! The game isn't over until you lose all your lives, just reinitialize your ball by pressing the center button.
-  * Once you reach level 3, a second ,much slower, ball will be added to the game. When this happens, you must keep all your balls from falling. If one of the balls hits the bottom of the screen, then both balls will disappear and you will have to initialize them again. Your lives will then decrease by 1. To accomodate for the additional ball, your bat width will double in size. This additional ball will also increase in speed as you level up.
+  * Once you reach level 3, a second, much slower, ball will be added to the game. When this happens, you must keep all your balls from falling. If one of the balls hits the bottom of the screen, then both balls will disappear and you will have to initialize them again. Your lives will then decrease by 1. To accomodate for the additional ball, your bat width will double in size. This additional ball will also increase in speed as you level up.
   * If you lose all your lives, your bat will turn red, indicating game over. The game will reset, starting you back at the initial bat width, initial ball amount and initial ball speed. Your lives will be restored, but your level will go back down to one while your score will go down to zero. Pressing the center button will start the game again, turning the bat and ball to its default color scheme of cyan and red.
   * If the user wishes to quit the round in the middle of play, you can press BTNU and it will reset the game in a similiar manner to losing all your lives.
 * In terms of setting up the game, you'll need attachments like a VGA connector, VGA cable, HDMI cable, VGA-to-HDMI converter, and a micro-B USB
@@ -70,10 +70,38 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
 ## Modifications (15 points)
 * “Modifications” (15 points of the Submission category)
   * If building on an existing lab or expansive starter code of some kind, describe your “modifications” – the changes made to that starter code to improve the code, create entirely new functionalities, etc. Unless you were starting from one of the labs, please share any starter code used as well, including crediting the creator(s) of any code used. It is perfectly ok to start with a lab or other code you find as a baseline, but you will be judged on your contributions on top of that pre-existing code!
-	* If you truly created your code/project from scratch, summarize that process here in place of the above.
  
 
 * Color Change
+  * As previously mentioned, we wanted our game to have distinct color schemes on three separate occasions:
+    * The default color scheme of a cyan bat and a red ball
+    * The bat turning red when a player has lost all their lives
+    * The alternative color scheme of a green bat and a purple ball when a player levels up
+  * To implement these color changes, our team created a new process named "cball" or color ball and a signal named "color_control" set to an initial value of 0
+    * `SIGNAL color_control : INTEGER := 0;`
+  * color_control is meant to keep track of the color_scheme that is presently displayed on the screen. If color_control = 0, then the default color scheme will display. If color_control = 1, then the bat will turn red and the ball will turn cyan. However, because the ball will not be displayed when a player encounters "game over," the player will never see the cyan ball displayed. If color_control = 2, then the alternative color scheme will display a green bat and a purple ball. This is implemented in the code below.
+   ```
+    cball : PROCESS (color_control, bat_on) IS
+    BEGIN
+    
+    IF color_control = 0 THEN
+    	red <= NOT bat_on;
+    	green <= NOT (ball_on OR ball_on1);
+    	blue <= NOT (ball_on OR ball_on1);
+    ELSIF color_control = 1 THEN
+        red <= NOT (ball_on OR ball_on1);
+        green <= NOT bat_on;
+        blue <= NOT bat_on;
+    ELSIF color_control = 2 THEN
+        red <= NOT bat_on;
+        green <= NOT (ball_on OR ball_on1);
+        blue <= NOT bat_on;
+        
+    END IF;
+
+    END PROCESS;
+    ```
+   * 
 * initializing a second ball at level three
 * implementing "lives"
 * implementing "levels" and level up
