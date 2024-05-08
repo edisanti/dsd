@@ -31,6 +31,7 @@
 * Click 'Program Device' then click xc7a100t_0 to download pong.bit to the Nexys A7-100T board
 ### 5. Initiate the game by pushing the BTNC button
 * Use the BTNL and BTNR to move the bat left and right
+![image](board_inputs.jpg)
  
  ## Description of Inputs and Outputs going from the Vivado Project to the Nexys board (10 points)
  * Description of inputs from and outputs to the Nexys board from the Vivado project (10 points of the Submission category)
