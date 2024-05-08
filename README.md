@@ -370,7 +370,7 @@ ARCHITECTURE Behavioral OF pong IS
 	```
  	* We created the score_counter_tmp1 signal, and this was implemented everywhere the original score_counter_tmp was implemented to remedy this issue.
 
-### Implementing a "game over" and Reset
+### <ins>Implementing a "game over" and Reset<ins>
 * To implement our "game over" we worked mostly in the "life control" if statement (as previously mentioned in the lives modification)
 * We created an if statement with the condition that lives was equal to 1 (lives = "0000000000000001"). Initially, the condition was lives = 0000000000000000 ( or 0 in decimal), however, the "game over" changes didn't implement until after the ball "fell" whilst lives = 0000000000000000. To accomodate for this, the condition was set to lives = "0000000000000001". Once "game over" was reached, the game resets. This means ball speed(s), bat width, score_counter, lvl_counter, and lives were reset to their initial values, respectively. The bat also turns red to indicate "game over." These changes are implemented in the code below:
 ```
@@ -387,7 +387,62 @@ ARCHITECTURE Behavioral OF pong IS
            END IF;
 	   ...
 ```
-### Implement "kill switch"
+### <ins>Implement "kill switch"<ins>
+* The purpose of the "kill switch" was to give the user the option to stop the game in the middle of playing and have it reset for the next user.
+* We utilized the BTNU button to stop the game when pressed. This can occur when one or both balls are active or when the game is paused between lives. When the button is pressed it resets the game in a similar manner to when the game is over.
+
+ * To implement the BTNU button so it's input could be used for the game, we had to initialize BTNU:
+   	1. In the top file (pong.vhd):
+   		* In the pong entity:
+   			````
+   	  		ENTITY pong IS
+			    PORT (
+				...
+				BTNU : IN STD_LOGIC
+			    ); 
+			END pong;
+   	  		````
+   	  	* In the bat_n_ball component port:
+			````
+			COMPONENT bat_n_ball IS
+				PORT (
+				    ...
+				    BTNU : IN STD_LOGIC
+				);
+			````
+   	     * In the bat_n_ball portmap:
+			````
+			add_bb : bat_n_ball
+			PORT MAP(--instantiate bat and ball component
+			    ...
+			    BTNU => BTNU
+			);
+			````
+   	2. In bat_n_ball.vhd:
+   		* In bat_n_ball entity port:
+   			````
+			ENTITY bat_n_ball IS
+			    PORT (
+			        ...
+			        BTNU : IN STD_LOGIC
+			    );
+   	  		````
+   	  	* Implementation used to stop game:
+			````
+			IF BTNU = '1' THEN
+			    game_on <= '0';
+			    game_on1 <= '0';
+			    ball_speed <= "00000000100";
+			    ball_speed1 <= "00000000000";
+			    bat_w <= 40;
+			    score_counter <= "0000000000000000";
+			    lvl_counter <= "0000000000000001";
+			    lives <= "0000000000000101"; --5
+			    color_control <= 1;
+			END IF;
+			````
+   	3. In the constraint file (pong.xdc):
+   	   ``set_property -dict { PACKAGE_PIN M18 IOSTANDARD LVCMOS33 } [get_ports { BTNU }];``
 
 ## Summary (10 points)
 > Conclude with a summary of the process itself – who was responsible for what components (preferably also shown by each person contributing to the github repository!), the timeline of work completed, any difficulties encountered and how they were solved, etc. (10 points of the Submission category)
