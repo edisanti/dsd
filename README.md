@@ -3,6 +3,8 @@
 ## Submission (80% of your project grade):
 * Your final submission should be a github repository of very similar format to the labs themselves with an opening README document with the expected components as follows:
 
+**This project is a continuation based off the final version of Lab 6**
+
 ## Expected Behavior (10 points)
 * A description of the expected behavior of the project, attachments needed (speaker module, VGA connector, etc.), related images/diagrams, etc. (10 points of the Submission category)
   * The more detailed the better – you all know how much I love a good finite state machine and Boolean logic, so those could be some good ideas if appropriate for your system. If not, some kind of high level block diagram showing how different parts of your program connect together and/or showing how what you have created might fit into a more complete system could be appropriate instead.
@@ -72,7 +74,7 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
   * If building on an existing lab or expansive starter code of some kind, describe your “modifications” – the changes made to that starter code to improve the code, create entirely new functionalities, etc. Unless you were starting from one of the labs, please share any starter code used as well, including crediting the creator(s) of any code used. It is perfectly ok to start with a lab or other code you find as a baseline, but you will be judged on your contributions on top of that pre-existing code!
  
 
-* Color Change
+### Color Change
   * As previously mentioned, we wanted our game to have distinct color schemes on three separate occasions:
     * The default color scheme of a cyan bat and a red ball
     * The bat turning red when a player has lost all their lives
@@ -103,7 +105,6 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
 ```
    * To start the game at the default color scheme, we initialized the signal color_control = 0 (code shown previously)
    * To change the color schemes between the default and alternative when a player levels up, an if statement is implemented within the "level up" if statement. The way it works is that when a player levels up, if the default color scheme was currently displayed (color_control <= 0), then the color_control would be assigned to a new value of two (color_control <= 2) and vice versa. This is implemented in the code below:
-
 ```
 	            ...
                     IF color_control = 0 THEN
@@ -113,9 +114,10 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
                     END IF;
 		    ...
 ```
-   * To turn the bat red when the player encounters "game over," color_control is assigned to 1 (color_control <= 1) in the "game over" if statement. This is implemented in the code shown below:
-    
-````
+
+   * To turn the bat red when the player encounters "game over," color_control is assigned to 1 (color_control <= 1) in the "game over" if statement. This is implemented in the code shown below: 
+
+```
       IF life_control = 1 THEN
         lives <= lives - "0000000000000001";
          IF lives = "0000000000000001" THEN
@@ -128,9 +130,11 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
             color_control <= 1;
             END IF;
             ...
-````
-* When initially implementing this code, we had assigned color_control <= 0 when the ball was initialized, or when the center button was pressed, so that the game could reset to the default color scheme after experiencing a "game over." We observed that by doing this, the default color scheme would display every time the center button was pressed. This causes issues in the case that a ball falls while the alternative color scheme is displayed. The color scheme would change when a player does not yet reach the next level. 
-* To remedy this issue, our team implemented an if statement that would display the default color scheme only if the bat was previously red (color_control <= 1)
+```
+
+   * When initially implementing this code, we had assigned color_control <= 0 when the ball was initialized, or when the center button was pressed, so that the game could reset to the default color scheme after experiencing a "game over." We observed that by doing this, the default color scheme would display every time the center button was pressed. This causes issues in the case that a ball falls while the alternative color scheme is displayed. The color scheme would change when a player does not yet reach the next level. 
+   * To remedy this issue, our team implemented an if statement that would display the default color scheme only if the bat was previously red (color_control <= 1)
+    
 ```
         IF serve = '1' AND game_on = '0' THEN -- test for new serve
             
@@ -153,13 +157,84 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
             END IF;
             ...
 ```
-* initializing a second ball at level three
-* implementing "lives"
-* implementing "levels" and level up
-* displaying level counter, life counter, and score counter
-* implementing a "game over" and reset
-* ball speed increase
-* implement "kill switch"
+### Initializing a Second Ball and Wider Bat at Level Three
+### Implementing "lives"
+  * Our team wanted to incorporate a lives component in our game to enhance gameplay. To do this, we created an output port "lives_display" in our bat_n_ball.vhd file. We also created two signals, "lives" and "lives_tmp." "Lives" is initialized with a value of 5 so that a player starts off with 5 lives. "Lives_tmp" is initialized at 0, the purpose in this will be explained later on
+```
+   ...
+   lives_display: OUT std_logic_vector (15 DOWNTO 0)
+   ...
+   SIGNAL lives : STD_LOGIC_VECTOR(15 DOWNTO 0) := conv_std_logic_vector(5,16);
+   SIGNAL lives_tmp : INTEGER := 0;
+```
+  * When initially implementing the lives component, we started off with simply subtracting one from the "lives" signal within the "if ball meets bottom wall" section of the code. 
+    * `lives <= lives - "0000000000000001";`
+  * Unfortunately, when implementing this, the "lives" value would be subtracted from twice. We suspected this was because of the clock cycles that the value would be subtracted twice even though the ball touched the bottom wall once. In an attempt to remedy this, we implemented the "lives_tmp" signal. This signal would be set to 0 (lives_tmp <= 0) any time the ball hit any of the walls other than the bottom wall. If the ball hit the bottom wall, lives_tmp would be assigned to 1 (lives_tmp <= 0). Then, in the "if ball meets bottom wall" if statement, we added an extra conditional that would require that lives_tmp <= 0, otherwise the code wouldn't run. This was done to ensure that the code wouldn't run twice. This is implemented in the code shown below:
+    * ` ELSIF ball_y1 + bsize >= 600 AND lives_tmp = 0 THEN `
+  * Unfortunately, this iteration didn't work as well, our lives value was still subtracting twice. Then we tried a new approach. Similar to how we implemented a color change, we created a new signal called "life_control."
+    * `signal life_control : INTEGER := 0;`
+  * Life_control is assigned to one when the ball touches the bottom wall. This was done so that even if the "if ball meet bottom wall" if statement is run twice, it would only set life_control to one twice, not subtract from lives twice.
+```
+        ELSIF ball_y1 + bsize >= 600 AND lives_tmp = 0 THEN -- if ball meets bottom wall
+            ball_y_motion1 <= (NOT ball_speed) + 1; -- set vspeed to (- ball_speed) pixels
+            life_control <= 1;
+	    ...
+```
+  * To subtract one from lives, we created an if statement outside of the "if ball meet bottom wall" if statement. If life control is assigned to one, then the lives value would be subtracted from. This is implemented in the code below:
+```
+      IF life_control = 1 THEN
+      lives <= lives - "0000000000000001";
+      ...
+```
+  * To display the lives value, lives is assigned to lives_display
+    * `lives_display <= lives;` 
+
+### Implementing "levels" and Leveling Up
+  * Implenting our levels component started with creating an output port "lvl_display" and a signal "lvl_counter." Lvl_counter starts at an initial value of one as most games start at level one.
+```
+	...
+        lvl_display : OUT std_logic_vector (15 DOWNTO 0);
+	...
+	SIGNAL lvl_counter : std_logic_vector (15 DOWNTO 0):= conv_std_logic_vector(1,16);
+	...
+```
+  * For our game, we wanted our players to level up every three hits, so in the "allow for bounce off bat" if statement, we created a "level up" if statement where the conditonal is score_counter = "0000000000000010" ( or 2 in decimal). The conditional is set to 2 and not 3 because when we initially had it set to three, the game would level up after four hits and not three.
+  * Within the "level up" if statement, the player's score would be reset to 0, their level would increase by 1, your ball speed(s) would increase slightly and the color scheme would change. These changes are implemented in the code below:
+```
+                IF score_counter = "0000000000000010" THEN
+                    score_counter <= "0000000000000000";
+                    lvl_counter <= lvl_counter + "0000000000000001";
+		    ...
+                    ball_speed <= ball_speed + "00000000001";
+                    ball_speed1 <= ball_speed1 + "00000000001";
+                    IF color_control = 0 THEN
+                        color_control <= 2;
+                    ELSIF color_control = 2 THEN
+                        color_control <= 0;
+                    END IF;
+		END IF;
+		...
+```
+  * The lvl_counter is displayed by assigning it to lvl_display
+    * `lvl_display <= lvl_counter;`
+
+
+### Displaying Level Counter, Life Counter, and Score Counter
+  * The implementation of this modification starts in our ledded16.vhd file. First, we commented out some lines so only LEDs 0, 3, and 7 would display. From left to right, these LEDs would display the lives, lvl_counter, and score_counter. We created two input ports called "data_lvl" and "data_lives" to mimic the behavior of the input port "data," which currently displays the score counter.
+    * ` data_lvl : IN STD_LOGIC_VECTOR (15 DOWNTO 0); `
+    * ` data_lives : IN STD_LOGIC_VECTOR (15 DOWNTO 0); `
+  * We came to understand that the data is dispersed to specific LEDs through "data4." We then utilized this information to assign data_lvl to LED 3 and data_lives to LED 7 so that they can display the level value and lives value respectively. This is implemented in the code below:
+```
+	data4 <= data(3 DOWNTO 0) WHEN dig = "000" ELSE -- digit 0
+	         data_lvl(3 DOWNTO 0) WHEN dig = "011" ELSE -- digit 1
+	         data_lives(3 DOWNTO 0) WHEN dig = "111" ELSE -- digit 2
+	         data(15 DOWNTO 12); -- digit 3
+	         --data(19 DOWNTO 16) WHEN dig = "100"
+
+```
+
+### Implementing a "game over" and Reset
+### Implement "kill switch"
 
 ## Summary (10 points)
 * Conclude with a summary of the process itself – who was responsible for what components (preferably also shown by each person contributing to the github repository!), the timeline of work completed, any difficulties encountered and how they were solved, etc. (10 points of the Submission category)
