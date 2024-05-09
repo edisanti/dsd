@@ -390,6 +390,7 @@ ARCHITECTURE Behavioral OF pong IS
             score_counter_tmp1 <= "0000000000000000";
  	```
 	* To remedy this, we set both game_on and game_on1 to 0 to turn off the first and second ball regardless of which one hits the bottom wall first. This corrected the double subtraction of lives.
+* Ultimately, we decided to stop after adding a second ball. The game was already rather difficult as is, so we thought that adding a third or more balls would cause the game to be nearly unplayable. However, if we were to implement a third ball, we would follow a similar process to how we implemented the second one. We would need to start with duplicating all of the necessary signals again. Then we would need set the parameters for the third ball to be drawn and to allow the ball to bounce off all of the walls. We would also need to implement some sort of IF statement where the "serve" occurs so we can set when the third ball would appear (for example, the 6th level). We would need to create another IF statement to subtract lives if the third ball met the bottom wall, as well as turning off the ball when any of the balls meet the bottom wall to avoid our first issue with subtracting too many lives. To avoid the issue of the ball going through the bat, we would need to implement another temporary variable. The same can be done for adding a fourth, fifth, etc. ball. 
 
 ### <ins>Implementing a "game over" and Reset<ins>
 * To implement our "game over" we worked mostly in the "life control" if statement (as previously mentioned in the lives modification)
