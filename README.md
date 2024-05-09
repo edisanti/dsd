@@ -9,9 +9,10 @@
   * If you lose all your lives, your bat will turn red, indicating game over. The game will reset, starting you back at the initial bat width, initial ball amount and initial ball speed. Your lives will be restored, but your level will go back down to one while your score will go down to zero. Pressing the center button will start the game again, turning the bat and ball to its default color scheme of cyan and red.
   * If the user wishes to quit the round in the middle of play, you can press BTNU and it will reset the game in a similiar manner to losing all your lives.
 * In terms of setting up the game, you'll need attachments like a VGA connector, VGA cable, HDMI cable, VGA-to-HDMI converter, and a micro-B USB
- 
 
+* Below is a block diagram giving a general overview of how the files are connected in this project and the descriptions and purposes of the files that we primarily worked with
 
+![image](CPE487_FinalProjectBlockDiagram.png)
 ## How to Get the Project to Work in Vivado and Nexys Board (5 points)
 
 ### 1. Create a new RTL project in Vivado Quick Start
