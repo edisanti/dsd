@@ -16,7 +16,8 @@ ENTITY pong IS
         btn0 : IN STD_LOGIC;
         SEG7_anode : OUT STD_LOGIC_VECTOR (7 DOWNTO 0); -- anodes of four 7-seg displays
         SEG7_seg : OUT STD_LOGIC_VECTOR (6 DOWNTO 0);
-        SW : IN UNSIGNED (4 DOWNTO 0)
+        SW : IN UNSIGNED (4 DOWNTO 0);
+        BTNU : IN STD_LOGIC
     ); 
 END pong;
 
@@ -49,7 +50,8 @@ ARCHITECTURE Behavioral OF pong IS
             SW : IN UNSIGNED (4 DOWNTO 0);
             score_display : OUT std_logic_vector (15 DOWNTO 0);
             lvl_display : OUT std_logic_vector (15 DOWNTO 0);
-            lives_display: OUT std_logic_vector (15 DOWNTO 0)
+            lives_display: OUT std_logic_vector (15 DOWNTO 0);
+            BTNU : IN STD_LOGIC
             --lvl : IN std_logic_vector (15 DOWNTO 0)
         );
     END COMPONENT;
@@ -115,7 +117,8 @@ BEGIN
         SW => SW,
         score_display => display,
         lvl_display => display_lvl, 
-        lives_display => display_lives
+        lives_display => display_lives,
+        BTNU => BTNU
     );
     
     vga_driver : vga_sync
