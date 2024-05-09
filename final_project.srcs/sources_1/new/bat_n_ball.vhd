@@ -16,7 +16,8 @@ ENTITY bat_n_ball IS
         SW : IN UNSIGNED (4 DOWNTO 0);
         score_display : OUT std_logic_vector(15 DOWNTO 0);
         lvl_display : OUT std_logic_vector (15 DOWNTO 0);
-        lives_display: OUT std_logic_vector (15 DOWNTO 0)
+        lives_display: OUT std_logic_vector (15 DOWNTO 0);
+        BTNU : IN STD_LOGIC
     );
 END bat_n_ball;
 
@@ -318,6 +319,19 @@ BEGIN
             ball_x1 <= (OTHERS => '0');
         ELSE ball_x1 <= temp(10 DOWNTO 0);
         END IF;
+        
+        IF BTNU = '1' THEN
+            game_on <= '0';
+            game_on1 <= '0';
+            ball_speed <= "00000000100";
+            ball_speed1 <= "00000000000";
+            bat_w <= 40;
+            score_counter <= "0000000000000000";
+            lvl_counter <= "0000000000000001";
+            lives <= "0000000000000101"; --5
+            color_control <= 1;
+        END IF;
+            
     END PROCESS;
     
 END Behavioral;
