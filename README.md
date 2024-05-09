@@ -390,7 +390,7 @@ ARCHITECTURE Behavioral OF pong IS
 ### <ins>Implement "kill switch"<ins>
 * The purpose of the "kill switch" was to give the user the option to stop the game in the middle of playing and have it reset for the next user.
 * We utilized the BTNU button to stop the game when pressed. This can occur when one or both balls are active or when the game is paused between lives. When the button is pressed it resets the game in a similar manner to when the game is over.
-
+![image](kill_switch.gif)
  * To implement the BTNU button so it's input could be used for the game, we had to initialize BTNU:
    	1. In the top file (pong.vhd):
    		* In the pong entity:
