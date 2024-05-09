@@ -1,13 +1,8 @@
 # CPE 487 - Digital System Design *Final Project*
 
-## Submission (80% of your project grade):
-* Your final submission should be a github repository of very similar format to the labs themselves with an opening README document with the expected components as follows:
-
 **This project is a continuation based off the final version of Lab 6**
 
 ## Expected Behavior (10 points)
->A description of the expected behavior of the project, attachments needed (speaker module, VGA connector, etc.), related images/diagrams, etc. (10 points of the Submission category)
->  	* The more detailed the better – you all know how much I love a good finite state machine and Boolean logic, so those could be some good ideas if appropriate for your system. If not, some kind of high level block diagram showing how different parts of your program connect together and/or showing how what you have created might fit into a more complete system could be appropriate instead.
 
 * With this project, we really wanted to improve upon the gameplay of lab 6 and enhance user experience, as well as make a few modifications to make the game more interesting. When first playing the game, three LEDs will flash on. Those will be your lives, your current level, and your score displayed from left to right. At the start of the game, you'll begin with 5 lives and start on level 1 with a score of 0. The goal of the game is to hit the ball with your bat to keep the ball from "falling" or touching the bottom of the screen. You can start the game by initializing the ball using the center button (BTNC) and you only move your bat left or right using the buttons, btnl and btnr, on the Nexys board. If you hit the ball with the bat, your score increases by 1. If you hit the ball three times, you'll level up! This means your score counter will reset back to 0 and your level counter will increase by 1. You'll also notice the speed of your ball will increase slightly each time you increase in level. To indicate your level up, the colors of the bat and ball will change from cyan and red to green and purple, respectively. As you level up, the color schemes will toggle back and forth. If you let the ball touch the bottom of the screen, the ball will disappear or "fall" and your lives will decrease by 1. If that happens, no worries! The game isn't over until you lose all your lives, just reinitialize your ball by pressing the center button.
   * Once you reach level 3, a second, much slower, ball will be added to the game. When this happens, you must keep all your balls from falling. If one of the balls hits the bottom of the screen, then both balls will disappear and you will have to initialize them again. Your lives will then decrease by 1. To accomodate for the additional ball, your bat width will double in size. This additional ball will also increase in speed as you level up.
@@ -18,7 +13,6 @@
 
 
 ## How to Get the Project to Work in Vivado and Nexys Board (5 points)
-> A summary of the steps to get the project to work in Vivado and on the Nexys board (5 points of the Submission category)
 
 ### 1. Create a new RTL project in Vivado Quick Start
 * Add six source files (file type VHDL): ***clk_wiz_0, clk_wiz_0_clk_wiz, vga_sync, bat_n_ball, adc_if,*** and ***pong***
@@ -75,8 +69,6 @@ anode <= "11111110" WHEN dig = "000" ELSE -- 0
 ````
 ![image](anode_display.jpg)
 ## Modifications (15 points)
-> “Modifications” (15 points of the Submission category)
->  * If building on an existing lab or expansive starter code of some kind, describe your “modifications” – the changes made to that starter code to improve the code, create entirely new functionalities, etc. Unless you were starting from one of the labs, please share any starter code used as well, including crediting the creator(s) of any code used. It is perfectly ok to start with a lab or other code you find as a baseline, but you will be judged on your contributions on top of that pre-existing code!
  
 
 ### <ins>Color Change<ins>
@@ -469,9 +461,6 @@ ARCHITECTURE Behavioral OF pong IS
    	   ``set_property -dict { PACKAGE_PIN M18 IOSTANDARD LVCMOS33 } [get_ports { BTNU }];``
 
 ## Summary (10 points)
-> Conclude with a summary of the process itself – who was responsible for what components (preferably also shown by each person contributing to the github repository!), the timeline of work completed, any difficulties encountered and how they were solved, etc. (10 points of the Submission category)
->	* And of course, the code itself separated into appropriate .vhd and .xdc files. (50 points of the Submission category; based on the code working, code complexity, quantity/quality of modifications, etc.)
->	* This is a group assignment, and for the most part you are graded as a group. I reserve the right to modify single student grades for extenuating circumstances, such as a clear lack of participation from a group member. You are allowed to rely on the expertise of your group members in certain aspects of the project, but you should all have at least a cursory understanding of all aspects of your project.
 
 * To conclude, we created a game that was an expansion on Lab-6. Our game utilized lives and levels, both of which were shown on the Nexys A7-100T as well as a score counter that counted up to 3 before going back to 0, indicating a level up. When the user leveled up, the ball speed would increase. In addition to the score counter becoming zero and the level counter incrementing to 1, the user is also notified of a level change by the bat and ball both changing in color. An increase in level also causes an increase of speed. If the user gets to level 3, then a second ball will be added at a slower speed and the bat size will double. Both balls must remain in play, otherwise you will lose a life. Starting with five lives, once the user reaches 0, the bat will turn red as an indication that the game is now over, and the lives, level, and counter all reset. If the user wishes to quit the game in the middle of play, they may press BTNU to stop the game and have it reset for the next user. 
 
