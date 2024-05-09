@@ -369,6 +369,27 @@ ARCHITECTURE Behavioral OF pong IS
 	SIGNAL score_counter_tmp1 : std_logic_vector(15 DOWNTO 0);
 	```
  	* We created the score_counter_tmp1 signal, and this was implemented everywhere the original score_counter_tmp was implemented to remedy this issue.
+* Another issue we encountered was when one ball met the bottom wall, it would subtract a life, but then when the second ball met the bottom wall, it would subtract another life. If it was the last life, the first ball would hit the bottom wall, the bat would turn red, and the game would reset, but then the second ball would meet the bottom wall and subtract from the lives for the next round. So the user would start the next round with 4 lives.
+	```
+ 	ELSIF ball_y + bsize >= 600 AND lives_tmp = 0 THEN -- if ball meets bottom wall
+            ball_y_motion <= (NOT ball_speed) + 1; -- set vspeed to (- ball_speed) pixels
+            life_control <= 1;
+            lives_tmp <= 1;
+            lives_tmp <= 0;
+            game_on <= '0'; -- and make ball disappear
+            game_on1 <= '0';
+            score_counter_tmp <= "0000000000000000";
+            
+ 	ELSIF ball_y1 + bsize >= 600 AND lives_tmp = 0 THEN -- if ball meets bottom wall
+            ball_y_motion1 <= (NOT ball_speed) + 1; -- set vspeed to (- ball_speed) pixels
+            life_control <= 1;
+            lives_tmp <= 1;
+            lives_tmp <= 0;
+            game_on1 <= '0'; -- and make ball disappear
+            game_on <= '0';
+            score_counter_tmp1 <= "0000000000000000";
+ 	```
+	* To remedy this, we set both game_on and game_on1 to 0 to turn off the first and second ball regardless of which one hits the bottom wall first. This corrected the double subtraction of lives.
 
 ### <ins>Implementing a "game over" and Reset<ins>
 * To implement our "game over" we worked mostly in the "life control" if statement (as previously mentioned in the lives modification)
