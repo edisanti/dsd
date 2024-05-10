@@ -31,11 +31,6 @@
 ![image](board_inputs.jpg)
  
  ## Description of Inputs and Outputs going from the Vivado Project to the Nexys board (10 points)
-> Description of inputs from and outputs to the Nexys board from the Vivado project (10 points of the Submission category)
->  	* As part of this category, if using starter code of some kind (discussed below), you should add at least one input and at least one output appropriate to your project to demonstrate your understanding of modifying the ports of your various architectures and components in VHDL as well as the separate .xdc constraints file.
-
-* Images and/or videos of the project in action interspersed throughout to provide context (10 points of the Submission category)
-  
 * There were three primary inputs that allowed this game to function: BTNC, BTNL, and BTNR. All of these were pre-existing inputs that were a part of Lab 6.
 	* BTNC: initiate the game and "serve" the ball
 	* BTNL: move the bat to the left
